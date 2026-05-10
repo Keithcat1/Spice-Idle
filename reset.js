@@ -1613,38 +1613,14 @@ function expand() {
                     closest = realm.realms[game.realms_visited[i]]
             }
 
-            let line = document.createElement("DIV")
-            let rx = 1020 + 0.6 * current.x
-            let ry = 1020 + 0.6 * current.y
-            let tx = 1020 + 0.6 * closest.x
-            let ty = 1020 + 0.6 * closest.y
-            let length = ((rx - tx) ** 2 + (ry - ty) ** 2) ** 0.5 - 7.5
-            let cx = (rx + tx) / 2 - length / 2
-            let cy = (ry + ty) / 2 - 0.25
-
-            line.className = "realm_line"
-
-            line.style.left = cx + "em"
-            line.style.top = cy + "em"
-            line.style.width = length + "em"
-            line.style.transform =
-                "rotate(" +
-                Math.atan2(ry - ty, rx - tx) * (180 / Math.PI) +
-                "deg)"
-
-            document.getElementById("exploration_map").appendChild(line)
         }
         game.current_realm = game.selected_realm
         game.realm_effects[0] = realm.realms[game.current_realm].normal
         game.realm_effects[1] = realm.realms[game.current_realm].special
         game.realm_effects[2] = realm.realms[game.current_realm].reset
 
-        document.getElementById("exploration_map").querySelectorAll(".realm")[
-            game.current_realm
-        ].className = "realm current_realm"
-        document.getElementById("exploration_selected").className =
-            "current_realm"
-
+    game.realmsNeedRefreshing = true
+    
         let mobile = Number(
             getComputedStyle(document.body).getPropertyValue("--mobile")
         )

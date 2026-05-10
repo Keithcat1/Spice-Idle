@@ -43,15 +43,18 @@ function expansion_update() {
                     "Expand Your Empire"
                 document.getElementById("expand_span").className =
                     "galactic_span bold"
+                    document.getElementById("expand_button").ariaDisabled = false
             } else {
                 document.getElementById("expand_span").innerHTML =
                     "Revisit This Realm"
                 document.getElementById("expand_span").className =
                     "galactic_span"
+                    document.getElementById("expand_button").ariaDisabled = false
             }
         } else {
             document.getElementById("expand_button").className =
                 "expand_button ex_locked"
+                document.getElementById("expand_button").ariaDisabled = true
         }
         document.getElementById("expand_up").style.display = "block"
         document.getElementById("expand_req2").style.display = "none"
@@ -511,9 +514,12 @@ function expansion_update() {
         "-" +
         format_inum(game.realm_limit_price, game.notation) +
         " galactic shards"
-    if (game.galactic_shards.cmp(game.realm_limit_price) >= 0) {
+        let affoardable = game.galactic_shards.cmp(game.realm_limit_price) >= 0
+        document.getElementById("realm_capacity_button").ariaDisabled = !affoardable
+    if (affoardable) {
         document.getElementById("realm_capacity_button").className =
             "ex_upgrade ex_unlocked3"
+            
         document.getElementById("realm_capacity_cost").className =
             "bold galactic_span"
     } else {
@@ -1322,4 +1328,28 @@ function dark_update() {
         document.getElementById("construct_auto").style.display = "none"
         document.getElementById("conversion_auto").style.display = "none"
     }
+}
+function realmUpdate() {
+    game.realmsNeedRefreshing = false;
+    let hidden = 0
+    let shown = 0
+    for(const r of realm.realms) {
+        let button = document.getElementById(`realm_select${r.id}`)
+        let distance = ((r.x - realm.realms[game.current_realm].x) ** 2 +
+                        (r.y - realm.realms[game.current_realm].y) ** 2) **
+                        0.5
+        let selectable = distance <
+                        40 + 10 * game.jump_distance_level &&
+                    (r.x ** 2 + r.y ** 2) ** 0.5 > 160 &&
+                    r.id >= 6
+
+        button.hidden = !selectable
+        button.innerText = `${r.name}, ${format_dec(distance)} jump units`
+        if(selectable) {
+            shown += 1
+        } else {
+            hidden += 1
+        }
+    }
+    console.log(`Shown: ${shown}, hidden: ${hidden}`)
 }

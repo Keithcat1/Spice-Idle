@@ -493,6 +493,7 @@ let game = {
     current_realm: 6,
     selected_realm: -1,
     hovered_realm: -1,
+    realmsNeedRefreshing: true,
 
     galactic_bought: new Array(20).fill(false),
 
@@ -3292,52 +3293,20 @@ class realm {
             ", " +
             this.col2 +
             ")"
+            let select = document.createElement("button")
+            select.id = `realm_select${this.id}`
+            select.hidden = true
 
-        realm_element.addEventListener("mouseover", () => {
+
+
+
+        select.addEventListener("click", () => {
             game.hovered_realm = this.id
         })
-        realm_element.addEventListener("mouseout", () => {
-            game.hovered_realm = -1
+        select.addEventListener("click", () => {
+            game.selected_realm = this.id
         })
-        realm_element.addEventListener("click", () => {
-            if (game.selected_realm === this.id) {
-                game.selected_realm = -1
-                document.getElementById("exploration_selected").style.display =
-                    "none"
-            } else {
-                if (
-                    ((this.x - realm.realms[game.current_realm].x) ** 2 +
-                        (this.y - realm.realms[game.current_realm].y) ** 2) **
-                        0.5 <
-                        40 + 10 * game.jump_distance_level &&
-                    (this.x ** 2 + this.y ** 2) ** 0.5 > 160 &&
-                    this.id >= 6
-                ) {
-                    game.selected_realm = this.id
-                    document.getElementById(
-                        "exploration_selected"
-                    ).style.display = "block"
-                    document.getElementById(
-                        "exploration_selected"
-                    ).style.width = 3.75 * this.size + "em"
-                    document.getElementById(
-                        "exploration_selected"
-                    ).style.height = 3.75 * this.size + "em"
-                    document.getElementById("exploration_selected").style.left =
-                        1020 + 0.6 * this.x - 1.875 * this.size + "em"
-                    document.getElementById("exploration_selected").style.top =
-                        1020 + 0.6 * this.y - 1.875 * this.size + "em"
-                    if (this.id === game.current_realm)
-                        document.getElementById(
-                            "exploration_selected"
-                        ).className = "current_realm"
-                    else
-                        document.getElementById(
-                            "exploration_selected"
-                        ).className = ""
-                }
-            }
-        })
+        realm_element.append(select)
 
         document.getElementById("exploration_map").appendChild(realm_element)
     }
@@ -3799,7 +3768,7 @@ function generate_realms() {
     document.getElementsByTagName("main")[0].style.display = "none"
     if (game.tab !== 4 || game.subtab[5] !== 0)
         document.getElementById("expansion_page").style.display = "none"
-
+/*
     let ctx = document.getElementById("exploration_selected").getContext("2d")
     ctx.clearRect(0, 0, 256, 256)
     ctx.strokeStyle = "white"
@@ -3839,7 +3808,7 @@ function generate_realms() {
     } else {
         document.getElementById("exploration_selected").style.display = "none"
     }
-
+*/
     console.log("naming realms...")
 
     realm.realms[0].name = "The Void"
@@ -4079,76 +4048,6 @@ function generate_realms() {
     }
 
     console.log("name generation failed " + duplicate_count + " times")
-
-    document.getElementById("noise_seed").seed.baseVal = Math.floor(
-        random_float() * 1000000
-    )
-
-    ctx = document.getElementById("exploration_stars").getContext("2d")
-    ctx.clearRect(0, 0, 4096, 4096)
-    ctx.fillStyle = "white"
-    for (let i = 0; i < 1000; i++) {
-        let rx = Math.floor(random_float() * 4096)
-        let ry = Math.floor(random_float() * 4096)
-        ctx.globalAlpha = random_float() ** 2.5
-        ctx.beginPath()
-        ctx.moveTo(rx + 2, ry)
-        ctx.lineTo(rx, ry + 2)
-        ctx.lineTo(rx - 2, ry)
-        ctx.lineTo(rx, ry - 2)
-        ctx.lineTo(rx + 2, ry)
-        ctx.closePath()
-        ctx.fill()
-    }
-
-    document.getElementById("exploration_bg2").style.backgroundImage =
-        "url(" + document.getElementById("exploration_stars").toDataURL() + ")"
-
-    if (game.fancy_realms) {
-        document.getElementById("turbulence").style.display = "block"
-        document.getElementById("exploration_bg2").style.display = "block"
-    } else {
-        document.getElementById("turbulence").style.display = "none"
-        document.getElementById("exploration_bg2").style.display = "none"
-    }
-
-    if (game.realms_visited.length >= 2) {
-        for (let i = 1; i < game.realms_visited.length; i++) {
-            let current = realm.realms[game.realms_visited[i]]
-            let closest = realm.realms[game.realms_visited[0]]
-            for (let j = 0; j < i; j++) {
-                if (
-                    (current.x - realm.realms[game.realms_visited[j]].x) ** 2 +
-                        (current.y - realm.realms[game.realms_visited[j]].y) **
-                            2 <
-                    (current.x - closest.x) ** 2 + (current.y - closest.y) ** 2
-                )
-                    closest = realm.realms[game.realms_visited[j]]
-            }
-
-            let line = document.createElement("DIV")
-            let rx = 1020 + 0.6 * current.x
-            let ry = 1020 + 0.6 * current.y
-            let tx = 1020 + 0.6 * closest.x
-            let ty = 1020 + 0.6 * closest.y
-            let length = ((rx - tx) ** 2 + (ry - ty) ** 2) ** 0.5 - 7.5
-            let cx = (rx + tx) / 2 - length / 2
-            let cy = (ry + ty) / 2 - 0.25
-
-            line.className = "realm_line"
-
-            line.style.left = cx + "em"
-            line.style.top = cy + "em"
-            line.style.width = length + "em"
-            line.style.transform =
-                "rotate(" +
-                Math.atan2(ry - ty, rx - tx) * (180 / Math.PI) +
-                "deg)"
-
-            document.getElementById("exploration_map").appendChild(line)
-        }
-    }
-
     console.log("took " + (Date.now() - start_time) + " ms")
 }
 

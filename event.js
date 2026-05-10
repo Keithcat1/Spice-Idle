@@ -5873,6 +5873,7 @@ function upgrade_jump_distance() {
         )
         game.jump_distance_level++
         game.jump_distance_price = fib(game.jump_distance_level * 10 + 12, true)
+        game.realmsNeedRefreshing = true
     }
 }
 

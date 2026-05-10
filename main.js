@@ -5933,6 +5933,7 @@ function load(savegame) {
     game.collapse_spice = new Decimal(game.collapse_spice)
     game.free_deity = new Decimal(game.free_deity)
     game.realm_limit = new Decimal(game.realm_limit)
+    game.realmsNeedRefreshing = true
 
     game.galactic_shards = new Decimal(game.galactic_shards)
     game.expand_spice = new Decimal(game.expand_spice)
@@ -6412,6 +6413,7 @@ function graphics_loop() {
     if (game.tab === 4) {
         expansion_update()
         dark_update()
+        if(game.realmsNeedRefreshing) realmUpdate()
     }
     if (game.tab === 5) stats_update()
     if (game.tab === 6) settings_update()
