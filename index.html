@@ -1350,11 +1350,6 @@
             </div>
 
             <div id="expansion_page">
-                <div class="center_button">
-                    <button id="expand_button" class="expand_button ex_unlocked" onclick="pre_expand()">
-                        <span id="expand_span" class="galactic_span bold" onclick="pre_expand()">Expand Your Empire</span>
-                    </button>
-                </div>
                 <div id="exploration_screen" class="exploration_screen">
                     <div id="exploration_view">
                         <div id="exploration_map">
@@ -1366,7 +1361,7 @@
                             <p id="realm_view" class="exploration_text">
                                 Hovered Realm
                             </p>
-                            <p id="realm_view2" aria-live="polite" aria-atomic="true" aria-relevant="all" class="exploration_text">
+                            <p id="realm_view2" aria-live="polite" class="exploration_text">
                                 none
                             </p>
                         </div>
@@ -1374,9 +1369,15 @@
 
                     <div class="expand_panel">
                         <div class="exploration_panel">
-                            <p aria-live="polite" aria-atomic="true" id="center_distance" class="expand_text">
+                            <p id="center_distance" class="expand_text">
                                 Distance to center: 65.0%
                             </p>
+
+                            <div class="center_button">
+                                <button id="expand_button" class="expand_button ex_unlocked" onclick="pre_expand()">
+                                    <span id="expand_span" class="galactic_span bold" onclick="pre_expand()">Expand Your Empire</span>
+                                </button>
+                            </div>
 
                             <p id="expand_up" class="expand_text galactic_shards">
                                 +2 galactic shards
