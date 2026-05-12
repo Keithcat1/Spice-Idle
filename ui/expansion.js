@@ -256,178 +256,21 @@ function expansion_update() {
         document.getElementById("revisit_auto_block").style.display = "none"
     }
 
-    if (
-        game.hovered_realm !== -1 &&
-        game.hovered_realm !== game.selected_realm
-    ) {
-        let realm_str = ""
-        if (realm.realms[game.hovered_realm].normal >= 0)
-            realm_str =
-                "+" +
-                format_dec(
-                    realm.realms[game.hovered_realm].normal,
-                    game.notation
-                ) +
-                "% normal " +
-                spice_text[0] +
-                " power"
-        else
-            realm_str =
-                "-" +
-                format_dec(
-                    -realm.realms[game.hovered_realm].normal,
-                    game.notation
-                ) +
-                "% normal " +
-                spice_text[0] +
-                " power"
-        if (realm.realms[game.hovered_realm].special >= 0)
-            realm_str +=
-                "<br>+" +
-                format_dec(
-                    realm.realms[game.hovered_realm].special,
-                    game.notation
-                ) +
-                "% special " +
-                spice_text[0] +
-                " power"
-        else
-            realm_str +=
-                "<br>-" +
-                format_dec(
-                    -realm.realms[game.hovered_realm].special,
-                    game.notation
-                ) +
-                "% special " +
-                spice_text[0] +
-                " power"
-        if (realm.realms[game.hovered_realm].reset > 0)
-            realm_str +=
-                "<br>+" +
-                format_dec(
-                    realm.realms[game.hovered_realm].reset,
-                    game.notation
-                ) +
-                "% reset gain power"
-        else if (realm.realms[game.hovered_realm].reset < 0)
-            realm_str +=
-                "<br>-" +
-                format_dec(
-                    -realm.realms[game.hovered_realm].reset,
-                    game.notation
-                ) +
-                "% reset gain power"
-
-        document.getElementById("realm_view_panel").style.display = "flex"
-
-        if (
-            (realm.realms[game.hovered_realm].x ** 2 +
-                realm.realms[game.hovered_realm].y ** 2) **
-                0.5 <=
-                160 ||
-            game.hovered_realm < 6
-        ) {
-            document.getElementById("realm_view").innerHTML = "?????"
-            realm_str = "It seems you can't access this realm for now..."
-        } else {
-            document.getElementById("realm_view").innerHTML =
-                realm.realms[game.hovered_realm].name
-        }
-
-        document.getElementById("realm_view2").innerHTML = realm_str
-    } else {
-        if (game.selected_realm !== -1) {
-            let realm_str = ""
-            if (realm.realms[game.selected_realm].normal >= 0)
-                realm_str =
-                    "+" +
-                    format_dec(
-                        realm.realms[game.selected_realm].normal,
-                        game.notation
-                    ) +
-                    "% normal " +
-                    spice_text[0] +
-                    " power"
-            else
-                realm_str =
-                    "-" +
-                    format_dec(
-                        -realm.realms[game.selected_realm].normal,
-                        game.notation
-                    ) +
-                    "% normal " +
-                    spice_text[0] +
-                    " power"
-            if (realm.realms[game.selected_realm].special >= 0)
-                realm_str +=
-                    "<br>+" +
-                    format_dec(
-                        realm.realms[game.selected_realm].special,
-                        game.notation
-                    ) +
-                    "% special " +
-                    spice_text[0] +
-                    " power"
-            else
-                realm_str +=
-                    "<br>-" +
-                    format_dec(
-                        -realm.realms[game.selected_realm].special,
-                        game.notation
-                    ) +
-                    "% special " +
-                    spice_text[0] +
-                    " power"
-            if (realm.realms[game.selected_realm].reset > 0)
-                realm_str +=
-                    "<br>+" +
-                    format_dec(
-                        realm.realms[game.selected_realm].reset,
-                        game.notation
-                    ) +
-                    "% reset gain power"
-            else if (realm.realms[game.selected_realm].reset < 0)
-                realm_str +=
-                    "<br>-" +
-                    format_dec(
-                        -realm.realms[game.selected_realm].reset,
-                        game.notation
-                    ) +
-                    "% reset gain power"
-
-            document.getElementById("realm_view_panel").style.display = "flex"
-
-            if (
-                (realm.realms[game.selected_realm].x ** 2 +
-                    realm.realms[game.selected_realm].y ** 2) **
-                    0.5 <=
-                    160 ||
-                game.selected_realm < 6
-            ) {
-                document.getElementById("realm_view").innerHTML = "?????"
-                realm_str = "It seems you can't access this realm for now..."
-            } else {
-                document.getElementById("realm_view").innerHTML =
-                    realm.realms[game.selected_realm].name
-            }
-
-            document.getElementById("realm_view2").innerHTML = realm_str
-        } else {
-            document.getElementById("realm_view_panel").style.display = "none"
-        }
-    }
+    let currentRealm = realm.realms[game.current_realm]
+    let currentX = currentRealm.x
+        let currentY = currentRealm.y
 
     document.getElementById("center_distance").innerHTML =
         "Distance to center: " +
         format_num(
             Math.round(
-                (realm.realms[game.current_realm].x ** 2 +
-                    realm.realms[game.current_realm].y ** 2) **
+    (currentX ** 2 +
+                    currentY ** 2 ) **
                     0.5
             ),
             game.notation
         ) +
-        " units"
+        ` units ${getDirectionToTarget(currentX, currentY, 0, 0)}`
 
     document.getElementById("galactic_shards_num").innerHTML = format_inum(
         game.galactic_shards,
@@ -457,52 +300,8 @@ function expansion_update() {
             "galactic shards"
     }
 
-    let realm_str = ""
-    if (game.realm_effects[0] >= 0)
-        realm_str +=
-            "+" +
-            format_dec(game.realm_effects[0], game.notation) +
-            "% normal " +
-            spice_text[0] +
-            " power"
-    else
-        realm_str +=
-            "-" +
-            format_dec(-game.realm_effects[0], game.notation) +
-            "% normal " +
-            spice_text[0] +
-            " power"
-    if (game.realm_effects[1] >= 0)
-        realm_str +=
-            "<br>+" +
-            format_dec(game.realm_effects[1], game.notation) +
-            "% special " +
-            spice_text[0] +
-            " power"
-    else
-        realm_str +=
-            "<br>-" +
-            format_dec(-game.realm_effects[1], game.notation) +
-            "% special " +
-            spice_text[0] +
-            " power"
-    if (game.realm_effects[2] > 0)
-        realm_str +=
-            "<br>+" +
-            format_dec(game.realm_effects[2], game.notation) +
-            "% reset gain power"
-    else if (game.realm_effects[2] < 0)
-        realm_str +=
-            "<br>-" +
-            format_dec(-game.realm_effects[2], game.notation) +
-            "% reset gain power"
-    document.getElementById("realm_current2").innerHTML =
-        realm_str +
-        "<br><br>(Dark " +
-        spice_text[0] +
-        " and galactic shards are unaffected by these effects)"
-    document.getElementById("realm_current").innerHTML =
-        realm.realms[game.current_realm].name
+    document.getElementById("realm_current2").innerHTML = `${formatRealmEffects(currentRealm)}<br><br>(Dark ${spice_text[0]} and galactic shards are unaffected by these effects)`
+    document.getElementById("realm_current").textContent = currentRealm.name
 
     document.getElementById("realm_capacity_text").innerHTML =
         "Realm Capacity<br>" +
@@ -547,10 +346,12 @@ function expansion_update() {
                 "ex_upgrade ex_unlocked3"
             document.getElementById("jump_distance_cost").className =
                 "bold galactic_span"
+                document.getElementById("jump_distance_button").ariaDisabled = false
         } else {
             document.getElementById("jump_distance_button").className =
                 "ex_upgrade ex_locked"
             document.getElementById("jump_distance_cost").className = "bold"
+            document.getElementById("jump_distance_button").ariaDisabled = true
         }
     }
 
@@ -1329,12 +1130,61 @@ function dark_update() {
         document.getElementById("conversion_auto").style.display = "none"
     }
 }
+
+function formatRealmEffects(r) {
+    let realm_str = ""
+    if (r.normal !== 0) {
+        const sign = r.normal < 0 ? "-" : "+"
+        realm_str =
+            sign +
+            format_dec(
+                r.normal,
+                game.notation
+            ) +
+            "% normal " +
+            spice_text[0] +
+            " power"
+    }
+    if (r.special !== 0) {
+        const sign = r.special < 0 ? "-" : "+"
+        realm_str +=
+            "<br>" + sign +
+                format_dec(
+                r.special,
+                game.notation
+            ) +
+            "% special " +
+            spice_text[0] +
+            " power"
+    }
+    if (r.reset !== 0) {
+        const sign = r.reset < 0 ? "-" : "+"
+        realm_str +=
+        "<br>" + sign +
+        format_dec(
+            r.reset,
+            game.notation
+        ) +
+        "% reset gain power"
+    }
+    return realm_str
+}
+
 function realmUpdate() {
     game.realmsNeedRefreshing = false;
-    let hidden = 0
-    let shown = 0
+    let currentRealm = realm.realms[game.current_realm]
+    let currentX = currentRealm.x
+    let currentY = currentRealm.y
+
+    document.getElementById("realm_view2").innerHTML = formatRealmEffects(currentRealm)
+
+
+    let map = document.getElementById("exploration_map")
+    while (map.firstChild) {
+        map.removeChild(map.lastChild);
+    }
+    
     for(const r of realm.realms) {
-        let button = document.getElementById(`realm_select${r.id}`)
         let distance = ((r.x - realm.realms[game.current_realm].x) ** 2 +
                         (r.y - realm.realms[game.current_realm].y) ** 2) **
                         0.5
@@ -1342,14 +1192,42 @@ function realmUpdate() {
                         40 + 10 * game.jump_distance_level &&
                     (r.x ** 2 + r.y ** 2) ** 0.5 > 160 &&
                     r.id >= 6
+            if(!selectable) {
+                continue
+            }
+        let realm_element = document.createElement("div")
 
-        button.hidden = !selectable
-        button.innerText = `${r.name}, ${format_dec(distance)} jump units`
-        if(selectable) {
-            shown += 1
-        } else {
-            hidden += 1
-        }
+            let select = document.createElement("button")
+        select.addEventListener("click", () => {
+            game.hovered_realm = r.id
+            game.selected_realm = r.id
+            
+            document.getElementById("realm_view2").innerHTML = formatRealmEffects(r)
+        })
+
+        select.textContent = `${r.name} ${getDirectionToTarget(currentX, currentY, r.x, r.y)}${game.realms_visited.includes(r.id) ? " (visited)" : ""}, ${format_dec(distance)} jump units`
+
+        realm_element.append(select)
+
+        map.appendChild(realm_element)
     }
-    console.log(`Shown: ${shown}, hidden: ${hidden}`)
+}
+function getDirectionToTarget(x, y, targetX, targetY) {
+    if(x < targetX && y<targetY) {
+        return "northeast"
+    } else if(x == targetX && y < targetY) {
+        return "north"
+    } else if(x > targetX && y < targetY) {
+        return "northwest"
+    } else if(y == targetY && x > targetX) {
+        return "west"
+    } else if(y > targetY && x < targetX) {
+        return "southeast"
+    } else if(x == targetX && y > targetY) {
+        return "south"
+    } else if(x > targetX && y > targetY) {
+        return "southwest"
+    } else {
+    return ""
+    }
 }

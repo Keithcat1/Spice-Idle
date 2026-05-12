@@ -1595,10 +1595,6 @@ function expand() {
         game.peak_galactic_amount = new Decimal(0)
         game.peak_galactic_time = 0
 
-        document.getElementById("exploration_map").querySelectorAll(".realm")[
-            game.current_realm
-        ].className = "realm"
-
         if (!game.realms_visited.includes(game.selected_realm)) {
             game.realms_visited.push(game.selected_realm)
             let current = realm.realms[game.selected_realm]

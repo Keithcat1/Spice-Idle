@@ -3276,39 +3276,6 @@ class realm {
         this.name = ""
 
         realm.realms.push(this)
-
-        let realm_element = document.createElement("DIV")
-        realm_element.className = "realm"
-        if (this.id === game.current_realm)
-            realm_element.className = "realm current_realm"
-        realm_element.style.width = 2.5 * this.size + "em"
-        realm_element.style.height = 2.5 * this.size + "em"
-        realm_element.style.left = 1020 + 0.6 * this.x - 1.25 * this.size + "em"
-        realm_element.style.top = 1020 + 0.6 * this.y - 1.25 * this.size + "em"
-        realm_element.style.backgroundImage =
-            "linear-gradient(" +
-            this.angle +
-            "deg, " +
-            this.col1 +
-            ", " +
-            this.col2 +
-            ")"
-            let select = document.createElement("button")
-            select.id = `realm_select${this.id}`
-            select.hidden = true
-
-
-
-
-        select.addEventListener("click", () => {
-            game.hovered_realm = this.id
-        })
-        select.addEventListener("click", () => {
-            game.selected_realm = this.id
-        })
-        realm_element.append(select)
-
-        document.getElementById("exploration_map").appendChild(realm_element)
     }
 }
 

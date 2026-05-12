@@ -5348,6 +5348,7 @@ function hotkey_tick() {
 //updating the exploration screen on screen size changes
 window.addEventListener("resize", function () {
     if (!pause) {
+        console.log("Resized")
         let mobile = Number(
             getComputedStyle(document.body).getPropertyValue("--mobile")
         )
@@ -5497,18 +5498,9 @@ function import_save() {
 
                 realm.realms = []
                 realm_map.clear()
-                for (const r of document
-                    .getElementById("exploration_map")
-                    .querySelectorAll(".realm")) {
-                    r.parentNode.removeChild(r)
-                }
-                for (const r of document
-                    .getElementById("exploration_map")
-                    .querySelectorAll(".realm_line")) {
-                    r.parentNode.removeChild(r)
-                }
                 window.setTimeout(function () {
                     begin_realm_generation(true)
+                    game.realmsNeedRefreshing = true
                 }, 100)
             }
         }
